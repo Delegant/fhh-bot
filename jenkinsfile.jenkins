@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage("First step") {
             steps {
-                echo 'hello world'
+                sh 'docker build /.'
             }
         }
     }
