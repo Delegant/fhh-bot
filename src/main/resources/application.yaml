@@ -1,5 +1,8 @@
 spring:
   datasource:
-    username: user
-    password: password
-    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:password}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+logging:
+  level:
+    ru.nataliaoskina: debug

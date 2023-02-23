@@ -9,5 +9,4 @@ class FhhBotApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
