@@ -2,6 +2,15 @@
 // Check ub1 properties
 properties([disableConcurrentBuilds()])
 
+// Servers:
+// ----------------------------------------------------------------------------
+server_ip = ""
+db_ip = "172.17.0.1"
+serverDevCredentials = "fhh-bot-credentials-id"
+// ----------------------------------------------------------------------------
+
+// Linear part of algorithm
+// ----------------------------------------------------------------------------
 pipeline {
     agent {
         label 'master'
@@ -12,8 +21,27 @@ pipeline {
     }
     stages {
         stage("First step") {
-            steps {
-                sh 'docker build /.'
+            withCredentials([
+                    string(
+                            credentialsId: 'fhh-bot-credentials-id',
+                            variable: 'fhh_bot_token'
+                    ),
+                    usernamePassword(
+                            credentialsId: 'server-db-credentials-id',
+                            passwordVariable: 'db_server_password',
+                            usernameVariable: 'db_server_username')
+            ]) {
+                script {
+                    docker.build(
+                            "fhh:0.0.1-SNAPSHOT}",
+                            "-f Dockerfile \
+					--build-arg DB_URL=db_ip \
+					--build-arg DB_USERNAME=${db_server_username} \
+					--build-arg DB_PASSWORD=${db_server_password} \
+					--build-arg BOT_TOKEN=${fhh_bot_token} ."
+                    )
+                    sh 'docker images'
+                }
             }
         }
     }
