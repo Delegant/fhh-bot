@@ -39,4 +39,7 @@ mvnw.cmd
 
 ### property ###
 application-local.yaml
+application*
+
+lib/
 application-server.yaml

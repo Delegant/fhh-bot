@@ -1,7 +1,9 @@
 FROM maven:3.9-eclipse-temurin-17-alpine AS MAVEN_BUILD
 WORKDIR /usr/src/myapp
+COPY pom.xml .
+RUN mvn clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r target/
 COPY ./ ./
-RUN mvn clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2  mvn clean package -Dmaven.test.skip
 
 FROM openjdk:17-jdk-slim
 WORKDIR /usr/bin/myapp

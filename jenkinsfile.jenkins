@@ -20,27 +20,26 @@ pipeline {
         timestamps()
     }
     stages {
-        stage("First step") {
-            withCredentials([
-                    string(
-                            credentialsId: 'fhh-bot-credentials-id',
-                            variable: 'fhh_bot_token'
-                    ),
-                    usernamePassword(
-                            credentialsId: 'server-db-credentials-id',
-                            passwordVariable: 'db_server_password',
-                            usernameVariable: 'db_server_username')
-            ]) {
+        stage("Mvn build Tar") {
+            steps {
                 script {
-                    docker.build(
-                            "fhh:0.0.1-SNAPSHOT}",
-                            "-f Dockerfile \
-					--build-arg DB_URL=db_ip \
-					--build-arg DB_USERNAME=${db_server_username} \
-					--build-arg DB_PASSWORD=${db_server_password} \
-					--build-arg BOT_TOKEN=${fhh_bot_token} ."
-                    )
-                    sh 'docker images'
+                    withCredentials([
+                            string(
+                                    credentialsId: 'fhh-bot-credentials-id',
+                                    variable: 'TOKEN'
+                            ),
+                            usernamePassword(
+                                    credentialsId: 'server-db-credentials-id',
+                                    passwordVariable: 'PASSWORD',
+                                    usernameVariable: 'USERNAME')
+                    ]) {
+                        docker.image('maven:3.9-eclipse-temurin-17-alpine').inside("-v $HOME/.m2:/root/.m2"){
+                            sh 'mvn compile jib:buildTar -Djib.container.environment=DB_USERNAME=$USERNAME,DB_PASSWORD=$PASSWORD,BOT_TOKEN=$TOKEN,DB_URL=jdbc:postgresql://172.17.0.1:5432/fhhdb'
+                        }
+
+                        sh 'docker load --input ./target/jib-image.tar'
+                        sh 'docker run --name fhh-bot -rm -d fhh-bot:0.0.1-SNAPSHOT'
+                    }
                 }
             }
         }
