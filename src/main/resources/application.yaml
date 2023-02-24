@@ -3,6 +3,9 @@ spring:
     username: ${DB_USERNAME:user}
     password: ${DB_PASSWORD:password}
     url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+telegram:
+  botUserName: ${BOT_NAME:TestFhhBot}
+  token: ${BOT_TOKEN}
 logging:
   level:
     ru.nataliaoskina: debug
