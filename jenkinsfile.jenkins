@@ -38,7 +38,7 @@ pipeline {
                         }
 
                         sh 'docker load --input ./target/jib-image.tar'
-                        sh 'docker run --name fhh-bot -rm -d fhh-bot:0.0.1-SNAPSHOT'
+                        sh 'docker run --name fhh-bot --rm -d fhh-bot:0.0.1-SNAPSHOT'
                     }
                 }
             }
