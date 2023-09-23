@@ -18,8 +18,15 @@ docker run -p 8080:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home jenk
 ========================== агент
 
 docker run -d --name=jenkins-agent-ssh --publish 2200:22 -e "JENKINS_AGENT_SSH_PUBKEY=<public_key_from_server>" \
- -e "JENKINS_URL=http://00.000.000.000:8080" \
+ -e "JENKINS_URL=http://<jenkins_server_ip>:8080" \
  -e "JENKINS_AGENT_NAME=ssh-agent" \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v jenkins_home:/home/jenkins \
- jenkins/ssh-agent
+ -v jenkins_home_agent:/home/jenkins/agent \
+ -v jenkins_home_jenkins:/home/jenkins/.jenkins \
+ -v jenkins_tmp:/tmp \
+ -v jenkins_run:/run \
+ -v jenkins_var_run:/var/run \
+ delegant/jenkins-ssh-agent-docker-cli:latest
+
+docker exec -it jenkins-agent-ssh chown root:docker /var/run/docker.sock
