@@ -27,12 +27,14 @@ pipeline {
 
                     def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep '^fhh-bot\$'", returnStatus: true) == 0
                     def imageExists = sh(script: "docker images -q $dockerImageName --format '{{.Repository}}' | grep '^$dockerImageName\$'", returnStatus: true) == 0
-    
+                    echo "containerExists: $containerExists"
+                    echo "imageExists: $imageExists"
+
                     if (containerExists) {
                         sh "docker stop fhh-bot && docker rm fhh-bot" // Остановить и удалить существующий контейнер
                     }
     
-                    if (dockerImageExists) {
+                    if (imageExists) {
                         sh "docker rmi $dockerImageName" // Удалить существующий образ
                     }
                 }
