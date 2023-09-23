@@ -55,7 +55,7 @@ pipeline {
                                     usernameVariable: 'USERNAME')
                     ]) {
                         docker.image('maven:3.9-eclipse-temurin-17-alpine').inside("-v $HOME/.m2:/root/.m2"){
-                            sh 'mvn compile jib:buildTar -Djib.container.environment=DB_USERNAME=$USERNAME,DB_PASSWORD=$PASSWORD,BOT_TOKEN=$TOKEN,DB_URL=jdbc:postgresql://172.17.0.1:5432/fhhdb'
+                            sh 'mvn compile jib:buildTar -Djib.container.environment=DB_USERNAME=$USERNAME,DB_PASSWORD=$PASSWORD,BOT_TOKEN=$TOKEN,DB_URL=jdbc:postgresql://172.17.0.3:5432/fhhdb'
                         }
 
                         sh 'docker load --input ./target/jib-image.tar'
