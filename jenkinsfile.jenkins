@@ -20,6 +20,19 @@ pipeline {
         timestamps()
     }
     stages {
+        stage("Check and Replace Docker Image") {
+            steps {
+                script {
+                    def dockerImageName = 'fhh-bot' // Без явно заданного тега
+                    def dockerImageExists = sh(script: "docker inspect -f {{.Id}} $dockerImageName || true", returnStatus: true) == 0
+    
+                    if (dockerImageExists) {
+                        sh "docker stop fhh-bot && docker rm fhh-bot" // Остановить и удалить существующий контейнер
+                        sh "docker rmi $dockerImageName" // Удалить существующий образ
+                    }
+                }
+            }
+        }
         stage("Mvn build Tar") {
             steps {
                 script {
