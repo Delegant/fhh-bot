@@ -36,7 +36,7 @@ pipeline {
     
                     if (imageExists) {
                         def imageIdName = sh(script: "docker images -q $dockerImageName --format '{{.ID}}'", returnStdout: true).trim()
-                        sh "docker rmi $imageIdName" // Удалить существующий образ
+                        sh "docker rmi -f $imageIdName" // Удалить существующий образ
                     }
                 }
             }
