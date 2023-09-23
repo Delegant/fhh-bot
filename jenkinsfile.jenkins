@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     def dockerImageName = 'fhh-bot' // Без явно заданного тега
-                    def dockerImageExists = sh(script: "docker images -q $dockerImageName", returnStatus: true)
+                    def dockerImageExists = sh(script: "docker images -q $dockerImageName", returnStatus: true).toString().trim()
     
                     if (dockerImageExists) {
                         sh "docker stop fhh-bot && docker rm fhh-bot" // Остановить и удалить существующий контейнер
