@@ -25,8 +25,8 @@ pipeline {
                 script {
                     def dockerImageName = 'fhh-bot' // Без явно заданного тега
 
-                    def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep '^fhh-bot$'", returnStatus: true)
-                    def imageExists = sh(script: "docker images -q $dockerImageName" --format '{{.Repository}}' | grep '^$dockerImageName$'", returnStatus: true)
+                    def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep '^fhh-bot\$'", returnStatus: true)
+                    def imageExists = sh(script: "docker images -q $dockerImageName" --format '{{.Repository}}' | grep '^$dockerImageName\$'", returnStatus: true)
     
                     if (containerExists) {
                         sh "docker stop fhh-bot && docker rm fhh-bot" // Остановить и удалить существующий контейнер
