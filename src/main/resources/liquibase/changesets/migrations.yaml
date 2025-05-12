@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1746914100
+      author: tony
+      comment: Создание таблицы меню и связей родительских узлов
+      changes:
+        - createTable:
+            tableName: menu_node
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: key
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: label
+                  type: VARCHAR(255)
+              - column:
+                  name: callback_data
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_id
+                  type: UUID
+              - column:
+                  name: is_visible
+                  type: BOOLEAN
+              - column:
+                  name: order_index
+                  type: INT
+              - column:
+                  name: button_row
+                  type: INT
+                  remarks: "Номер строки клавиатуры"
+              - column:
+                  name: button_column
+                  type: INT
+                  remarks: "Порядковый номер в строке"
+        - addForeignKeyConstraint:
+            baseTableName: menu_node
+            baseColumnNames: parent_id
+            referencedTableName: menu_node
+            referencedColumnNames: id
+            constraintName: fk_menu_node_parent
+
+  - changeSet:
+      id: 1746914110
+      description:
+      author: tony
+      changes:
+        - createTable:
+            tableName: bot_user
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: telegram_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: telegram_chat_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: current_menu_id
+                  type: UUID
+              - column:
+                  name: history
+                  type: TEXT
+        - addForeignKeyConstraint:
+            baseTableName: bot_user
+            baseColumnNames: current_menu_id
+            referencedTableName: menu_node
+            referencedColumnNames: id
+            constraintName: fk_user_current_node
